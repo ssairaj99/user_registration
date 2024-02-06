@@ -6,6 +6,9 @@ from django.shortcuts import render
 from app.forms import *
 from django.http import HttpResponse
 
+from django.core.mail import send_mail
+
+
 def registration(request):
     ufo=UserForm()
     pfo=ProfileForm()
@@ -13,7 +16,7 @@ def registration(request):
     d={'ufo':ufo,'pfo':pfo}
 
     if request.method=='POST' and request.FILES:
-        ufd=UserForm(request.POST)
+        ufd=UserForm(request.POST) 
         pfd=ProfileForm(request.POST,request.FILES)
 
         if ufd.is_valid() and pfd.is_valid():
@@ -27,7 +30,12 @@ def registration(request):
             MPFDO.username=MUFDO
             MPFDO.save()
 
+            send_mail('registraion','HLW THANK YOU FOR YOUR REGISTRATION ! ! ! ! ','sairaj7770@gmail.com',[MUFDO.email],fail_silently=False)
+
+
+
             return HttpResponse('Registration Sucessful')
         else:
             return HttpResponse('Invalid Input')
+
     return render(request,'registration.html',d)
